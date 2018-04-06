@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const model = require('../models/user');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const config = require('../config/database');
@@ -60,7 +59,6 @@ router.post('/register', function (req, res, next) {
     });
 });
 
-
 // Authenticate
 router.post('/authenticate', function (req, res, next) {
     const email = req.body.email;
@@ -93,7 +91,8 @@ router.post('/authenticate', function (req, res, next) {
                         user: {
                             id: user._id,
                             name: user.name,
-                            email: user.email
+                            email: user.email,
+                            username: user.username
                         }
                     });
                 } else {
@@ -116,9 +115,21 @@ router.post('/authenticate', function (req, res, next) {
 router.get('/profile', passport.authenticate('jwt', {
     session: false
 }), function (req, res, next) {
-    res.json({
-        user: req.user
+    if(req.user){
+        res.json({
+            user: req.user
+        });
+    }else{
+        return res.status(400).send({
+            message: 'no user'
+        });
+    }
+    User.updateLastSeen(req.user._id, function(errUpdate, result){
+        if(errUpdate){
+            throw errUpdate;
+        }
     });
+
 });
 
 // Validate

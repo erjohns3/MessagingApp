@@ -10,15 +10,19 @@
     "author": "Eric Johnson",
     "license": "ISC",
     "dependencies": {
+        "@types/socket.io-client": "^1.4.32",
         "bcryptjs": "*",
         "body-parser": "*",
         "cors": "*",
         "express": "*",
+        "jquery": "^3.3.1",
         "jsonwebtoken": "*",
         "mongoose": "*",
         "npm": "^5.8.0",
         "passport": "*",
-        "passport-jwt": "*"
+        "passport-jwt": "*",
+        "socket.io": "*",
+        "socket.io-client": "^2.1.0"
     },
     "devDependencies": {
         "@angular/cli": "^1.7.3"
