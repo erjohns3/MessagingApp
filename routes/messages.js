@@ -34,7 +34,6 @@ router.get('/home', function (req, res, next) {
                     } else {
                         messages[i] = {
                             _id: docs[i]._id,
-                            user_id: 0,
                             name: '--deleted--',
                             username: '--deleted--',
                             msg: docs[i].msg
@@ -42,11 +41,12 @@ router.get('/home', function (req, res, next) {
                     }
                     num++;
                     if (num == messages.length) {
+                        //return res.json([]);
                         return res.json(messages);
                     }
                 });
             }
-        }else{
+        } else {
             return res.json([]);
         }
     });

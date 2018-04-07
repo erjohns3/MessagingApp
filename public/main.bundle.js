@@ -252,7 +252,7 @@ var DashboardComponent = /** @class */ (function () {
     function DashboardComponent(authService, websocketService) {
         this.authService = authService;
         this.websocketService = websocketService;
-        this.messageOldestId = '000000000000000000000000';
+        this.messageOldestId = '';
         this.usersRecent = [];
         this.usersOnline = [];
         this.messages = [];
@@ -986,37 +986,40 @@ var AuthService = /** @class */ (function () {
     function AuthService(http) {
         this.http = http;
     }
+    // for each of the http requests
+    // local testing should be at " http://localhost:3000/ "
+    // deployment to heroku should be empty
     AuthService.prototype.registerUser = function (user) {
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["Headers"]();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('http://localhost:3000/users/register', user, { headers: headers }).map(function (res) { return res.json(); });
+        return this.http.post('users/register', user, { headers: headers }).map(function (res) { return res.json(); });
     };
     AuthService.prototype.authenticateUser = function (user) {
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["Headers"]();
         headers.append('Content-Type', 'application/json');
-        return this.http.post('http://localhost:3000/users/authenticate', user, { headers: headers }).map(function (res) { return res.json(); });
+        return this.http.post('users/authenticate', user, { headers: headers }).map(function (res) { return res.json(); });
     };
     AuthService.prototype.getProfile = function () {
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["Headers"]();
         this.loadUserData();
         headers.append('Authorization', this.authToken);
         headers.append('Content-Type', 'application/json');
-        return this.http.get('http://localhost:3000/users/profile', { headers: headers }).map(function (res) { return res.json(); });
+        return this.http.get('users/profile', { headers: headers }).map(function (res) { return res.json(); });
     };
     AuthService.prototype.deleteUser = function (id) {
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["Headers"]();
         headers.append('Content-Type', 'application/json');
-        return this.http.delete('http://localhost:3000/users/delete?id=' + id, { headers: headers }).map(function (res) { return res; });
+        return this.http.delete('users/delete?id=' + id, { headers: headers }).map(function (res) { return res; });
     };
     AuthService.prototype.updateUser = function (user) {
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["Headers"]();
         headers.append('Content-Type', 'application/json');
-        return this.http.put('http://localhost:3000/users/update', user, { headers: headers }).map(function (res) { return res.json(); });
+        return this.http.put('users/update', user, { headers: headers }).map(function (res) { return res.json(); });
     };
     AuthService.prototype.getMessages = function (oldestId) {
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["Headers"]();
         headers.append('Content-Type', 'application/json');
-        return this.http.get('http://localhost:3000/messages/home?id=' + oldestId, { headers: headers }).map(function (res) { return res.json(); });
+        return this.http.get('messages/home?id=' + oldestId, { headers: headers }).map(function (res) { return res.json(); });
     };
     ///////////////////////////////////////////////////////////////////////
     AuthService.prototype.loadUserData = function () {

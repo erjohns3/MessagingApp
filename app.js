@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+
+const port = process.env.PORT || 8080;      // deployment to Saleforce Heroku
+//const port = 3000;                        // local testing
+
 const server = require('http').createServer(app); // changed
 const io = require('socket.io').listen(server); // changed
 
@@ -107,6 +110,7 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('new user', function (data, callback) {
+        console.log(data);
         User.getUserById(data, function (userErr, existingUser) {
             if(userErr){
                 throw userErr;
@@ -121,7 +125,7 @@ io.sockets.on('connection', function (socket) {
             });
             callback(true);
             updateUsernames();
-            //console.log('Username: ' + socket.username);
+            console.log('Username: ' + socket.username);
         });
     });
 
