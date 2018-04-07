@@ -1,11 +1,15 @@
 const express = require('express');
+const socketIO = require('socket.io');
+
 const app = express();
 
 const port = process.env.PORT || 8080;      // deployment to Saleforce Heroku
 //const port = 3000;                        // local testing
 
-const server = require('http').createServer(app); // changed
-const io = require('socket.io').listen(server); // changed
+//const server = require('http').createServer(app); // changed
+//const io = require('socket.io').listen(server); // changed
+
+const io = socketIO(app);
 
 const users = require('./routes/users');
 const messages = require('./routes/messages');
@@ -30,8 +34,8 @@ db.on('error', function (err) {
     console.log('database error: ' + err);
 });
 
-server.listen(port);
-console.log('Server running...');
+//server.listen(port);
+//console.log('Server running...');
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -64,6 +68,12 @@ app.get('/', function (req, res) {
 
 app.get('*', function (req, res) {
     res.sendFile(path.join(__dirname, 'public/index.html'));
+});
+
+/////////////////////////////////////////////////////////////////////////
+
+app.listen(port, function(){
+    console.log('Server started in port '+port);
 });
 
 /////////////////////////////////////////////////////////////////////////
@@ -135,8 +145,5 @@ io.sockets.on('connection', function (socket) {
 });
 
 // Start Server
-/*
-app.listen(port, function(){
-    console.log('Server started in port '+port);
-});
-*/
+
+
