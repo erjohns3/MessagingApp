@@ -115,17 +115,17 @@ router.post('/authenticate', function (req, res, next) {
 router.get('/profile', passport.authenticate('jwt', {
     session: false
 }), function (req, res, next) {
-    if(req.user){
+    if (req.user) {
         res.json({
             user: req.user
         });
-    }else{
+    } else {
         return res.status(400).send({
             message: 'no user'
         });
     }
-    User.updateLastSeen(req.user._id, function(errUpdate, result){
-        if(errUpdate){
+    User.updateLastSeen(req.user._id, function (errUpdate, result) {
+        if (errUpdate) {
             throw errUpdate;
         }
     });
@@ -136,5 +136,50 @@ router.get('/profile', passport.authenticate('jwt', {
 router.get('/validate', function (req, res, next) {
     res.send('VALIDATE');
 });
+
+router.put('/update', function (req, res, next) {
+    let user = req.body;
+
+    if(user.name.new){
+        User.updateName(user._id, user.name.val, function (err, updatedUser) {
+            return res.json(updatedUser);
+        });
+    }else if(user.username.new){
+        User.getUserByUsername(user.username.val, function(err, existingUsernameUser){
+            if(!existingUsernameUser){
+                User.updateUsername(user._id, user.username.val, function (err, updatedUser) {
+                    return res.json(updatedUser);
+                });
+            }else{
+                return res.status(400).send({
+                    message: 'Username already taken'
+                });
+            }
+        });
+    }else if(user.email.new){
+        User.getUserByEmail(user.email.val, function(err, existingEmailUser){
+            if(!existingEmailUser){
+                User.updateEmail(user._id, user.email.val, function (err, updatedUser) {
+                    return res.json(updatedUser);
+                });
+            }else{
+                return res.status(400).send({
+                    message: 'Email already taken'
+                });
+            }
+        });
+    }else if(user.password.new){
+        User.updatePassword(user._id, user.password.val, function (err, updatedUser) {
+            return res.send(updatedUser);
+        });
+    }
+    
+});
+
+router.delete('/delete', function (req, res, next) {
+    User.deleteUser(req.query.id, function (err, result) {
+        res.send(result);
+    });
+})
 
 module.exports = router;

@@ -19,7 +19,7 @@ const UserSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    lastseen:{
+    lastseen: {
         type: Number,
         required: false
     }
@@ -89,4 +89,56 @@ module.exports.comparePassword = function (candidatePassword, hash, callback) {
         if (err) throw err;
         callback(null, isMatch);
     });
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+module.exports.updateName = function (id, newName, callback) {
+    User.findByIdAndUpdate(id, {
+        name: newName
+    }, {
+        new: true
+    }, callback);
+};
+
+module.exports.updateUsername = function (id, newUsername, callback) {
+    User.findByIdAndUpdate(id, {
+        username: newUsername
+    }, {
+        new: true
+    }, callback);
+};
+
+module.exports.updateEmail = function (id, newEmail, callback) {
+    User.findByIdAndUpdate(id, {
+        email: newEmail
+    }, {
+        new: true
+    }, callback);
+};
+
+module.exports.updatePassword = function (id, newPassword, callback) {
+    bcrypt.genSalt(10, function (saltErr, salt) {
+        if (saltErr) {
+            console.log('salt error');
+            throw saltErr;
+        }
+        bcrypt.hash(newPassword, salt, function (hashErr, hash) {
+            if (hashErr) {
+                console.log('hash error');
+                throw hashErr;
+            }
+            User.findByIdAndUpdate(id, {
+                password: hash
+            }, {
+                new: true
+            }, callback);
+        });
+    });
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+module.exports.deleteUser = function (id, callback) {
+    User.findByIdAndRemove(id, callback);
 };
