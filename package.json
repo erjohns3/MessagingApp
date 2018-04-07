@@ -14,14 +14,14 @@
         "bcryptjs": "*",
         "body-parser": "*",
         "cors": "*",
-        "express": "*",
+        "express": "4.16.3",
         "jquery": "^3.3.1",
         "jsonwebtoken": "*",
         "mongoose": "*",
         "npm": "^5.8.0",
         "passport": "*",
         "passport-jwt": "*",
-        "socket.io": "*",
+        "socket.io": "2.1.0",
         "socket.io-client": "^2.1.0"
     },
     "devDependencies": {

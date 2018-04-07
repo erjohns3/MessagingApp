@@ -1,15 +1,16 @@
 const express = require('express');
+const http = require('http');
 const socketIO = require('socket.io');
 
 const app = express();
+const server = http.createServer(app);
+const io = socketIO.listen(server);
 
-const port = process.env.PORT || 8080;      // deployment to Saleforce Heroku
-//const port = 3000;                        // local testing
+//const port = process.env.PORT || 8080;      // deployment to Saleforce Heroku
+const port = 3000; // local testing
 
-//const server = require('http').createServer(app); // changed
-//const io = require('socket.io').listen(server); // changed
-
-const io = socketIO(app);
+server.listen(port);
+console.log('server running...');
 
 const users = require('./routes/users');
 const messages = require('./routes/messages');
@@ -33,9 +34,6 @@ db.on('connected', function () {
 db.on('error', function (err) {
     console.log('database error: ' + err);
 });
-
-//server.listen(port);
-//console.log('Server running...');
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -72,9 +70,11 @@ app.get('*', function (req, res) {
 
 /////////////////////////////////////////////////////////////////////////
 
+/*
 app.listen(port, function(){
     console.log('Server started in port '+port);
 });
+*/
 
 /////////////////////////////////////////////////////////////////////////
 
@@ -84,7 +84,7 @@ var socketUsers = [];
 const User = require('./models/user');
 const Message = require('./models/message');
 
-io.sockets.on('connection', function (socket) {
+io.on('connection', function (socket) {
     connections.push(socket);
     //console.log(socket);
     console.log('Connected: %s sockets connected', connections.length);
@@ -113,7 +113,7 @@ io.sockets.on('connection', function (socket) {
             msg: data
         });
         Message.addMessage(newMessage, function (messageErr, user) {
-            if(messageErr){
+            if (messageErr) {
                 throw messageErr;
             }
         });
@@ -122,7 +122,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('new user', function (data, callback) {
         console.log(data);
         User.getUserById(data, function (userErr, existingUser) {
-            if(userErr){
+            if (userErr) {
                 throw userErr;
             }
             socket.id = existingUser._id;
@@ -145,5 +145,3 @@ io.sockets.on('connection', function (socket) {
 });
 
 // Start Server
-
-
